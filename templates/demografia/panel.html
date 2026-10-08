@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Panel{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Panel de población y densidad</h1>
+<form method="get" class="card card-body mb-3" aria-label="Filtros del panel">
+  <div class="row g-2 align-items-end">
+    {% include "crud/_filter_fields.html" with form=filter_form %}
+    <div class="col-auto">
+      <button class="btn btn-primary" type="submit">Aplicar</button>
+      <a class="btn btn-link" href="{{ request.path }}">Limpiar</a>
+    </div>
+  </div>
+</form>
+
+{% if not charts %}
+  <p class="text-body-secondary">No hay períodos cargados.</p>
+{% else %}
+<p class="small text-body-secondary">
+  Período {{ period }} · {% if district %}Distrito: {{ district }}{% else %}Todos los distritos{% endif %}
+  {% if DEMO_MODE %} · <strong>Datos de demostración: cifras ficticias</strong>{% endif %}
+</p>
+<div class="row g-2 mb-4">
+  <div class="col-6 col-lg"><div class="card card-body py-2"><div class="small text-body-secondary">Población</div><div class="fs-5">{{ totals.population }}</div></div></div>
+  <div class="col-6 col-lg"><div class="card card-body py-2"><div class="small text-body-secondary">Hogares</div><div class="fs-5">{{ totals.households }}</div></div></div>
+  <div class="col-6 col-lg"><div class="card card-body py-2"><div class="small text-body-secondary">Barrios</div><div class="fs-5">{{ totals.neighborhoods }}</div></div></div>
+  <div class="col-6 col-lg"><div class="card card-body py-2"><div class="small text-body-secondary">Superficie (km²)</div><div class="fs-5">{{ totals.area|floatformat:2 }}</div></div></div>
+  <div class="col-12 col-lg"><div class="card card-body py-2"><div class="small text-body-secondary">Densidad (hab/km²)</div><div class="fs-5">{{ totals.density|default:"—" }}</div></div></div>
+</div>
+
+<div class="row g-3">
+  <section class="col-lg-6"><div class="card card-body">
+    <h2 class="h6">Población por barrio</h2>
+    <div class="chart-box" data-height-items="population"><canvas id="chart-population" role="img" aria-label="Gráfico de barras: población por barrio"></canvas></div>
+  </div></section>
+  <section class="col-lg-6"><div class="card card-body">
+    <h2 class="h6">Densidad por barrio (hab/km²)</h2>
+    <div class="chart-box" data-height-items="density"><canvas id="chart-density" role="img" aria-label="Gráfico de barras: densidad por barrio"></canvas></div>
+  </div></section>
+  <section class="col-lg-6"><div class="card card-body">
+    <h2 class="h6">Evolución temporal de la población{% if district %} – {{ district }}{% endif %}</h2>
+    <div class="chart-box"><canvas id="chart-evolution" role="img" aria-label="Gráfico de líneas: evolución de la población por período"></canvas></div>
+  </div></section>
+  <section class="col-lg-6"><div class="card card-body">
+    <h2 class="h6">Comparación por distrito</h2>
+    <p class="small text-body-secondary mb-1">Todos los distritos en el período seleccionado{% if district %}; el distrito filtrado aparece resaltado{% endif %}.</p>
+    <div class="chart-box"><canvas id="chart-districts" role="img" aria-label="Gráfico de barras: población y densidad por distrito"></canvas></div>
+  </div></section>
+  <section class="col-lg-6"><div class="card card-body">
+    <h2 class="h6">Distribución por grupos de edad</h2>
+    <div class="chart-box"><canvas id="chart-ages" role="img" aria-label="Gráfico de barras: población por grupo de edad"></canvas></div>
+  </div></section>
+</div>
+{{ charts|json_script:"chart-data" }}
+{% endif %}
+{% endblock %}
+{% block scripts %}
+{% if charts %}
+<script src="{% static 'vendor/chart.umd.min.js' %}"></script>
+<script src="{% static 'js/panel.js' %}"></script>
+{% endif %}
+{% endblock %}

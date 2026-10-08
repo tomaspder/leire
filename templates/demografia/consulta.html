@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Consulta{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Consulta de población y densidad por barrio</h1>
+<form method="get" class="card card-body mb-3" role="search" aria-label="Filtros"
+      hx-get="{{ request.path }}" hx-target="#resultados" hx-push-url="true"
+      hx-trigger="change, keyup changed delay:400ms from:input[type=search], submit">
+  <div class="row g-2 align-items-end">
+    {% include "crud/_filter_fields.html" with form=filter_form %}
+    <div class="col-auto">
+      <button class="btn btn-secondary" type="submit">Filtrar</button>
+      <a class="btn btn-link" href="{{ request.path }}">Limpiar</a>
+    </div>
+  </div>
+</form>
+<div id="resultados" aria-live="polite">
+  {% include "demografia/_consulta_results.html" %}
+</div>
+{% endblock %}

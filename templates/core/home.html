@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Inicio</h1>
+{% if perms.demografia.view_neighborhoodpopulation %}
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <a class="card h-100 text-decoration-none" href="{% url 'panel' %}">
+      <div class="card-body"><h2 class="h5">Panel de gráficos</h2>
+        <p class="mb-0 text-body-secondary">Población, densidad, evolución temporal, distritos y grupos de edad.</p></div>
+    </a>
+  </div>
+  <div class="col-md-6">
+    <a class="card h-100 text-decoration-none" href="{% url 'consulta' %}">
+      <div class="card-body"><h2 class="h5">Consulta</h2>
+        <p class="mb-0 text-body-secondary">Tabla filtrable por período, distrito, barrio y densidad.</p></div>
+    </a>
+  </div>
+</div>
+{% endif %}
+<h2 class="h5">Administración de datos</h2>
+{% if entities %}
+<div class="list-group">
+  {% for e in entities %}
+    <a class="list-group-item list-group-item-action" href="{% url e.url_list %}">{{ e.verbose_name_plural|capfirst }}</a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-body-secondary">Su usuario no tiene permisos asignados. Solicite acceso a una persona administradora.</p>
+{% endif %}
+{% endblock %}

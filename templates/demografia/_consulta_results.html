@@ -1,0 +1,44 @@
+<div class="results">
+{% if not period %}
+  <p class="text-body-secondary">No hay períodos cargados.</p>
+{% else %}
+<div class="row g-2 mb-3">
+  <div class="col-6 col-md-3"><div class="card card-body py-2"><div class="small text-body-secondary">Barrios</div><div class="fs-5">{{ totals.neighborhoods }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="card card-body py-2"><div class="small text-body-secondary">Población</div><div class="fs-5">{{ totals.population }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="card card-body py-2"><div class="small text-body-secondary">Hogares</div><div class="fs-5">{{ totals.households }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="card card-body py-2"><div class="small text-body-secondary">Densidad (hab/km²)</div><div class="fs-5">{{ totals.density|default:"—" }}</div></div></div>
+</div>
+<p class="small text-body-secondary mb-2">Período {{ period }} · {{ page_obj.paginator.count }} barrio{{ page_obj.paginator.count|pluralize }}</p>
+<div class="table-responsive">
+<table class="table table-sm table-striped table-hover align-middle bg-body">
+  <thead>
+    <tr>
+      <th scope="col">Distrito</th>
+      <th scope="col">Barrio</th>
+      <th scope="col" class="num">Superficie (km²)</th>
+      <th scope="col" class="num">Población</th>
+      <th scope="col" class="num">Hogares</th>
+      <th scope="col" class="num">Personas por hogar</th>
+      <th scope="col" class="num">Densidad (hab/km²)</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for r in page_obj %}
+    <tr>
+      <td>{{ r.neighborhood.district.name }}</td>
+      <td>{{ r.neighborhood.name }}</td>
+      <td class="num">{{ r.neighborhood.area_km2 }}</td>
+      <td class="num">{{ r.total_population }}</td>
+      <td class="num">{{ r.households }}</td>
+      <td class="num">{{ r.household_size|floatformat:2|default:"—" }}</td>
+      <td class="num">{{ r.density_value|floatformat:1 }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="7" class="text-center text-body-secondary py-4">No hay registros que coincidan con los filtros.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include "crud/_pagination.html" %}
+{% endif %}
+</div>

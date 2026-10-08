@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Eliminar {{ entity.verbose_name }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Eliminar {{ entity.verbose_name }}</h1>
+<div class="card card-body">
+  <p>¿Confirma que desea eliminar <strong>{{ object }}</strong>? Esta acción no se puede deshacer.</p>
+  <p class="small text-body-secondary">Si el registro tiene datos relacionados, no se eliminará y se mostrará un aviso.</p>
+  <form method="post" class="d-flex gap-2">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Sí, eliminar</button>
+    <a class="btn btn-outline-secondary" href="{% url entity.url_list %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

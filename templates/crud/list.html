@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ entity.verbose_name_plural|capfirst }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <h1 class="h3 mb-0">{{ entity.verbose_name_plural|capfirst }}</h1>
+  {% if can_add %}
+    <a class="btn btn-primary" href="{% url entity.url_create %}">Nuevo registro</a>
+  {% endif %}
+</div>
+{% if filter_form %}
+<form method="get" class="card card-body mb-3" role="search" aria-label="Filtros"
+      hx-get="{{ request.path }}" hx-target="#resultados" hx-push-url="true"
+      hx-trigger="change, keyup changed delay:400ms from:input[type=search], submit">
+  <div class="row g-2 align-items-end">
+    {% include "crud/_filter_fields.html" with form=filter_form %}
+    <div class="col-auto">
+      <button class="btn btn-secondary" type="submit">Filtrar</button>
+      <a class="btn btn-link" href="{{ request.path }}">Limpiar</a>
+    </div>
+  </div>
+</form>
+{% endif %}
+<div id="resultados" aria-live="polite">
+  {% include "crud/_results.html" %}
+</div>
+{% endblock %}

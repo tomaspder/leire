@@ -1,0 +1,26 @@
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.coverage
+htmlcov/
+
+# Django
+/staticfiles/
+*.log
+*.sqlite3
+
+# Volcados de base de datos (pueden contener datos sensibles)
+*.sql
+*.dump
+*.backup
+
+# Editores
+.vscode/
+.idea/
